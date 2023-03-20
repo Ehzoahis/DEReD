@@ -1,6 +1,9 @@
 # DEReD
 The Offical Codebase for Fully Self-Supervised Depth Estimation from Defocus Clue
 
+## Authors
+[Haozhe Si](haozhes3@illinois.edu), [Bin Zhao](zhaobin@pjlab.org.cn), [Dong Wang](wangdong@pjlab.org.cn), [Yunpeng Gao](marennqx@gmail.com), [Mulin Chen](chenmulin@pjlab.org.cn), [Zhigang Wang](wangzhigang@pjlab.org.cn), [Xuelong Li](li@nwpu.edu.cn), 
+
 ## Run Training
 ```python
 python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --recon_all \ 
