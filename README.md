@@ -16,4 +16,4 @@ python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --reco
 ```
 
 ## Contact Authors
-[Haozhe Si](haozhes3@illinois.edu), [Bin Zhao](zhaobin@pjlab.org.cn), [Dong Wang](wangdong@pjlab.org.cn), [Xuelong Li](li@nwpu.edu.cn)
+[Haozhe Si](mailto:haozhes3@illinois.edu), [Bin Zhao](mailto:zhaobin@pjlab.org.cn), [Dong Wang](mailto:wangdong@pjlab.org.cn), [Xuelong Li](mailto:li@nwpu.edu.cn)
