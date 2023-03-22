@@ -15,5 +15,8 @@ python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --reco
 -N [experiment_name] --use_cuda --BS 32 --save_best --verbose --eval
 ```
 
+## Model Weight
+You can download the model weights trained on NYUv2 Focal Stack from [here](https://drive.google.com/file/d/1LQUt7Lo6KPKb0OsBETkvxeujOVdqOGjh/view?usp=share_link).
+
 ## Contact Authors
 [Haozhe Si](mailto:haozhes3@illinois.edu), [Bin Zhao](mailto:zhaobin@pjlab.org.cn), [Dong Wang](mailto:wangdong@pjlab.org.cn), [Xuelong Li](mailto:li@nwpu.edu.cn)
