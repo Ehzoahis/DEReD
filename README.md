@@ -1,6 +1,6 @@
 # DEReD (Depth Estimation via Reconstucting Defocus Image)
 
-[![Project Website](https://img.shields.io/badge/Project-Website-orange)](https://ehzoahis.github.io/DeReD)
+[![Project Website](https://img.shields.io/badge/Project-Website-orange)](https://ehzoahis.github.io/DEReD)
 [![arXiv](https://img.shields.io/badge/arXiv-2303.11791-b31b1b.svg)](https://arxiv.org/pdf/2303.10752.pdf)
 
 Official codes of CVPR 2023 [Paper](https://arxiv.org/pdf/2303.10752.pdf) | _Fully Self-Supervised Depth Estimation from Defocus Clue_
