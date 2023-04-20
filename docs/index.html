@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Self-supervised Depth Estimation by Reconstructing Focal Stack ">
+  <meta name="keywords" content="DfD">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propagate And Calibrate: Real-time Passive Non-line-of-sight Tracking</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/render-scene.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            Fully Self-Supervised Depth Estimation from Defocus Clue
+          </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a>Haozhe Si</a><sup>1,2*</sup>,</span>
+            <span class="author-block">
+              <a>Bin Zhao</a><sup>1,3*</sup>,</span>
+            <span class="author-block">
+              <a>Dong Wang</a><sup>1&dagger;</sup>,
+            </span>
+            <span class="author-block">
+              <a>Yunpeng Gao</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a>Mulin Chen</a><sup>1,3</sup>,
+            </span>
+            <span class="author-block">
+              <a>Zhigang Wang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a>Xuelong Li</a><sup>1,3&dagger;</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Shanghai AI Laboratory,</span>
+            <span class="author-block"><sup>2</sup>University of Illinois Urbana-Champaign,</span>
+            <span class="author-block"><sup>3</sup>Northwestern Polytechnical University</span>
+          </div>
+          
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>*</sup>Equal contribution,</span>
+            <span class="author-block"><sup>&dagger;</sup>Corresponding author</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2303.10752.pdf"
+                   class="external-link button is-normal is-rounded is-dark"
+                   target="_blank">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2303.10752"
+                   class="external-link button is-normal is-rounded is-dark"
+                   target="_blank">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/Ehzoahis/DEReD"
+                   class="external-link button is-normal is-rounded is-dark"
+                   target="_blank">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.kaggle.com/datasets/againstentropy1/nlos-track"
+                   class="external-link button is-normal is-rounded is-dark"
+                   target="_blank">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/pipeline.svg"
+      alt="Pipeline of our proposed framework."/>
+      
+      <h2 class="subtitle has-text-centered">
+        <!-- <span class="dnerf">PAC-Net</span> turns selfie videos from your phone into -->
+        An overview of the proposed framework. The framework consists of a neural model, DAIF-Net, and an optical model.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <video poster="" id="video_demo_0" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/demo_0.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="video_demo_1" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/demo_1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="video_demo_0" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/demo_0.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video poster="" id="video_demo_1" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/demo_1.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Depth-from-defocus (DFD), modeling the relationship between depth and defocus pattern in images, has demonstrated promising performance in depth estimation. Recently, several self-supervised works try to overcome the difficulties in acquiring accurate depth ground-truth. However, they depend on the all-in-focus (AIF) images, which cannot be captured in real-world scenarios. Such limitation discourages the applications of DFD methods. 
+          </p>
+          <p>
+            To tackle this issue, we propose a completely self-supervised framework that estimates depth purely from a sparse focal stack. We show that our framework circumvents the needs for the depth and AIF image ground-truth, and receives superior predictions, thus closing the gap between the theoretical success of DFD works and their applications in the real world. 
+          </p>
+          <p>
+            In particular, we propose (i) a more realistic setting for DFD tasks, where no depth or AIF image ground-truth is available; (ii) a novel self-supervision framework that provides reliable predictions of depth and AIF image under the challenging setting. 
+          </p> 
+          <p>
+            The proposed framework uses a neural model to predict the depth and AIF image, and utilizes an optical model to validate and refine the prediction. We verify our framework on three benchmark datasets with rendered focal stacks and real focal stacks. Qualitative and quantitative evaluations show that our method provides a strong baseline for self-supervised DFD tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <video poster="" id="video_demo_0" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/demo_0.mp4"
+                    type="video/mp4">
+          </video> -->
+          <!-- <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+        <!-- </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- PAC-Net. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Proposed Framework</h2>
+
+        <h3 class="title is-4">DAIF-Net</h3>
+        <div class="content has-text-justified">
+          <p>
+            To predict the depth and AIF image from the focal stack, we proposed the <b>D</b>epth<b>AIF</b>-<b>Net</b> (<b>DAIF-Net</b>). This architecture takes a focal stack of arbitrary size and estimates the depth map and AIF image. The parameters of encoders and bottlenecks are shared across all branches. We adopt the global pooling and fuse the branches by selecting the maxima of their features.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/FUNet.svg"
+            alt="The DAIF-Net architecture."/>
+            <p>The DAIF-Net architecture.</p>
+          </div>
+        </div>
+
+        <h3 class="title is-4">Defocus Map Generation</h3>
+        <div class="content has-text-justified">
+          <p>
+            To quantitatively measure the defocus blur in an image, we introduce the defocus map. Given an optical system, the defocus map can be calculated from the depth map once we establish the relationship between depth and defocus. As illustrated in the figure, when a point light source is out-of-focus, the
+            light rays will converge either in front of or behind the image plane, and form a blurry circle on the image plane. The circle of confusion (<i>CoC</i>) measures the diameter of such a blurry circle. If the point light source is in focus, it will form an infinitely small point on the image plane, making it the sharpest projection with the minimum <i>CoC</i>. Therefore, <i>CoC</i> describes the level of blurriness, in another word, the amount of defocus. We adopt the Thin Lens Equation to calculate the <i>CoC</i>.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/defocus.svg" width="400"
+            alt="Illustration of the thin-lens equation."/>
+            <p>Illustration of the thin-lens equation.</p>
+          </div>
+        </div>
+        <h3 class="title is-4">Focal Stack Reconstruction</h3>
+        <div class="content has-text-justified">
+          <p>
+            Given the defocus map and the AIF image, we can explicitly model the generation process of the defocus image. Taking advantage of the deterministic relationship, our predicted depth and AIF image can be supervised by reconstructing the input focal stack. To render a defocus image, we convolve the AIF image with the point spread function (PSF). PSF describes the pattern of a point light source transmitting to the image plane through the camera lens. In practice, we calculate the defocus blur using a simplified disc-shaped PSF, $i.e.$, a Gaussian kernel, following previous works.
+          </p>
+        </div>
+        <br/>
+      </div>
+    </div>
+    <!--/ PAC-Net. -->
+    
+    <!-- Dataset. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title">Focal Stack Dataset</h2>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <!-- Synthetic Data -->
+      <div class="column is-full-width">
+        <div class="content">
+          <h3 class="title is-4">Synthetic Dataset</h3>
+          <p class="has-text-justified">
+            DefocusNet Dataset is a synthetic dataset rendered using <a href="http://blender.org" target="_blank">Blender</a>. The dataset consists of random objects distributed in front of a wall. A virtual optical camera takes five images of the scene with varying focus distances and forms a focal stack. The original dataset is wildly used in supervised methods. However, the focus distances of the focal stacks are overly concentrated, causing indistinguishable defocus blur. Therefore, to perform an experiment in a similar setting, we regenerate the dataset with a set of more distributed focus distances using the code provided by the dataset author.
+          </p>
+        </div>
+      </div>
+    </div>
+      <!--/ Synthetic Data -->
+
+      <!-- Real-shot Data. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+      <h3 class="title is-4">Real Image with Synthetic Defocus Blur</h3>
+      <div class="columns is-centered">
+        <div class="column content">
+          <p class="has-text-justified">
+            To acquire sufficient realistic defocus images for model training and evaluation, we render the focal stack datasets from RGB-D datasets using the thin-lens equation and PSF convolution layers. The RGB-D datasets we use is NYUv2 dataset. NYUv2 dataset with synthetic defocus blur is also commonly used in DFD tasks. The dataset consists of 1449 pairs of aligned RGB images and depth maps. We train our model on the 795 training pairs and evaluate on the 654 testing pairs.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Real-shot Data. -->
+    </div>
+
+    <div class="columns is-centered">
+        <!-- Synthetic Data -->
+        <div class="column is-full-width">
+          <div class="content">
+            <h3 class="title is-4">Real Focal Stack Dataset</h3>
+            <p class="has-text-justified">
+              Mobile Depth is a real-world DFD dataset captured by a Samsung Galaxy S3 mobile phone. It consists of 11 aligned focal stacks with 14 to 33 images per stack. Since neither depth ground-truth nor camera parameters are provided, we only perform qualitative evaluation and comparison on this dataset with no further finetuning.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    <br/>
+    <!--/ Dataset. -->
+
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Evaluation</h2>
+
+        <!-- Results on Synthetic Data. -->
+        <h3 class="title is-4">Results on Synthetic Data</h3>
+        <div class="content has-text-justified">
+          <p>
+            We split the 1000 focal stacks into 500 training focal stacks and 500 testing focal stacks. For a fair comparison, we trained our method, along with the open-source state-of-the-art DFD methods, on our new training set. It is expected that our method does not perform as well as the supervised methods. This is because the DefocusNet dataset is texture-less, and our self-supervised framework is less sensitive to backgrounds, where defocus change is less obvious. Such issues do not exist for supervised methods because they always have access to the depth ground-truth. Meanwhile, we observe that our method is on par with the supervised methods when counting the results only for depths less than 0.5m, which indicates that our self-supervised method has higher accuracy in closer ranges.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/table1.svg" width="600"
+                 alt="Quantitative results for synthetic data"/>
+            <p>Evaluation results on DefocusNet test set. Regular means all results are considered; <0.5 m only counts results for depth less than 0.5 meters.
+            </p>
+          </div>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/defocusnet.svg" width="600"
+                 alt="Qualitative results for synthetic data"/>
+            <p>Some examples of the framework outputs comparing with the state-of-the-art supervised works. The outputs are produced from the input focal stacks with 5 images. For the depth map, lighter colors indicate farther distances.
+            </p>
+          </div>
+        </div>
+        <br/>
+        <!--/ Results on Synthetic Data. -->
+
+        <!-- Results on Real-shot Data. -->
+        <h3 class="title is-4">Results on Real Image with Synthetic Defocus Blur</h3>
+        <div class="content has-text-justified">
+          <p>
+            We present the results of our framework trained on the NYUv2 dataset with the synthetic focal stacks. We evaluate our models on the sparse testing focal stacks and compare our results to other DFD methods. The table shows that in sceneries with complex textures, our method is on par with the state-of-the-art on the majority of the metrics.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/table2.svg" width="600"
+                 alt="Quantitative results for nyuv2"/>
+            <p>Evaluation results on NYUv2 test set. Self-sup w/ AIF means that the method is self-supervised but utilizes AIF ground-truth. Results show that our method is on par with the state-of-the-art on NYUv2 dataset for the depth-from-defocus task.
+            </p>
+          </div>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/nyuv2.svg" width="600"
+                 alt="Qualitative results for nyuv2"/>
+            <p>Some examples of the framework outputs. The outputs are produced from the input focal stacks with 5 images. For the depth map, lighter colors indicate farther distances.
+            </p>
+          </div>
+        </div>
+        <br/>
+        <!--/ Results on Synthetic Data. -->
+
+        <h3 class="title is-4">Results on Real Focal Stack Dataset</h3>
+        <div class="content has-text-justified">
+          <p>
+            To evaluate our model on real focal stacks, qualitative experiments are performed on the Mobile Depth dataset. We compare our model with MobileDFF AiFDepthNet, DDF-DFV/FV and the finetuned AiFDepthNet using AIF ground-truth. While most of the deep methods give reasonable depth estimation, we claim that our framework is more advantageous since it is fully self-supervised.
+          </p>
+        </div>
+
+        <div class="columns is-vcentered">
+          <div class="column has-text-centered">
+            <img src="./static/images/mobiledfd.svg"
+                 alt="Qualitative results for mobiledfd"/>
+            <p>Qualitative depth estimation and AIF prediction results on the Mobile Depth dataset. The warmer color indicates a larger depth. Note that AiFDepthNet* is the finetuned model using AIF information.
+            </p>
+          </div>
+        </div>
+        <br/>
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            There's a lot of excellent work that was introduced around the same time as ours.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+            both use deformation fields to model non-rigid scenes.
+          </p>
+          <p>
+            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
+          </p>
+          <p>
+            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+    </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{si2023fully,
+      title={Fully Self-Supervised Depth Estimation from Defocus Clue},
+      author={Si, Haozhe and Zhao, Bin and Wang, Dong and Gao, Yupeng and Chen, Mulin and Wang, Zhigang and Li, Xuelong},
+      journal={arXiv preprint arXiv:2303.10752},
+      year={2023}
+    }
+</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://arxiv.org/pdf/2303.11791.pdf"
+         target="_blank">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" 
+         href="https://github.com/AgainstEntropy" 
+         class="external-link" 
+         disabled 
+         target="_blank">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a 
+            <a rel="license"
+              href="http://creativecommons.org/licenses/by-sa/4.0/"
+              target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License
+            </a>.
+          </p>
+          <p>
+            This means you are free to borrow the 
+            <a
+              href="https://github.com/againstentropy/NLOS-Track/" 
+              target="_blank">source code
+            </a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

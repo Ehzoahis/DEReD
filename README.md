@@ -43,7 +43,7 @@ python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --reco
 --blur_loss_lambda 1e1 --sm_loss_lambda 1e1 --log --vis
 ```
 
-### eval
+### Evaluation
 
 ```shell
 python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --recon_all \
@@ -53,7 +53,7 @@ python scripts/train.py --data_path [path/to/dataset] --dataset [Dataset] --reco
 ## Acknowledgement
 Parts of the code are developed from [DefocusNet](https://github.com/dvl-tum/defocus-net) and [UnsupervisedDepthFromFocus](https://github.com/shirgur/UnsupervisedDepthFromFocus).
 
-## Ciatation
+## Citation
 
 ```bibtex
 @article{si2023fully,
