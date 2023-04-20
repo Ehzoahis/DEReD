@@ -8,10 +8,6 @@ def load_data(dataset_config, dataset, BS, n_shot=-1, indices=None):
         train_dl, valid_dl, test_dl = _load_NYU_data(dataset_config, BS, NYU100=True)
     elif dataset == 'DefocusNet':
         train_dl, valid_dl, test_dl = _load_defocus_data(dataset_config, BS)
-    elif dataset == 'DSLR':
-        train_dl, valid_dl, test_dl = _load_DSLR_data(dataset_config, BS, n_shot=n_shot, sel_indices=indices)
-    elif dataset == 'SC':
-        train_dl, valid_dl, test_dl = _load_SC_data(dataset_config, BS)
     elif dataset == 'mobileDFD':
         train_dl, valid_dl, test_dl = _load_mDFD_data(dataset_config, BS, n_shot=n_shot, sel_indices=indices)
     else:
@@ -21,24 +17,9 @@ def load_data(dataset_config, dataset, BS, n_shot=-1, indices=None):
 def _load_defocus_data(dataset_config, BS, num_workers=8, valid_split=0.2, dataset_shuffle=True):
     dataset = DefocusNet(**dataset_config)
     indices = np.arange(len(dataset))
-    # train_test_split = len(dataset) // 2
-    # indices_train = indices[:train_test_split]
-    # indices_test = indices[train_test_split:]
-    # val_split = int(len(indices_test) * valid_split)
-    # indices_val = indices_test[:val_split]
-
     indices_train = indices
     indices_test = indices
     indices_val = indices
-
-
-    np.random.seed(0)
-    # np.random.shuffle(indices)
-    # train_test_split = int(len(dataset) * 0.9)  
-    # indices_train = indices[:train_test_split]
-    # indices_val = indices[train_test_split:]
-    # indices_test = indices
-
     dataset_train = torch.utils.data.Subset(dataset, indices_train)
     dataset_valid = torch.utils.data.Subset(dataset, indices_val)
     dataset_test = torch.utils.data.Subset(dataset, indices_test)
@@ -77,40 +58,6 @@ def _load_NYU_data(dataset_config, BS, num_workers=8, dataset_shuffle=True, vali
     print("Total number of testing sample:", len(indices_test))
 
     return loader_train, loader_valid, loader_test
-
-def _load_DSLR_data(dataset_config, BS, num_workers=8, dataset_shuffle=True, n_shot=-1, sel_indices=None):
-    dataset_train_all = DSLRDataset(**dataset_config, split='train')
-    dataset_test = DSLRDataset(**dataset_config, split='test')
-
-    indices = np.arange(len(dataset_train_all))
-    if n_shot != -1:
-        if sel_indices is None:
-            np.random.shuffle(indices)
-            indices = np.sort(indices[:n_shot])
-        else:
-            indices = sel_indices
-            if len(sel_indices) != n_shot:
-                print(f"{len(sel_indices)} != {n_shot}, use {len(sel_indices)} shots")
-        print(f"Using Indices: {indices}")
-    dataset_train = torch.utils.data.Subset(dataset_train_all, indices)
-
-    loader_train = torch.utils.data.DataLoader(dataset=dataset_train, num_workers=num_workers, batch_size=BS, shuffle=dataset_shuffle, pin_memory=True, drop_last=False)
-    loader_valid = torch.utils.data.DataLoader(dataset=dataset_train_all, num_workers=num_workers, batch_size=BS, shuffle=dataset_shuffle, pin_memory=True, drop_last=False)
-    loader_test = torch.utils.data.DataLoader(dataset=dataset_test, num_workers=1, batch_size=1, shuffle=False, pin_memory=True)
-
-    print("Total number of training sample:", len(dataset_train))
-    print("Total number of validation sample:", len(dataset_train_all))
-    print("Total number of testing sample:", len(dataset_test))
-
-    return loader_train, loader_valid, loader_test
-
-def _load_SC_data(dataset_config, BS, num_workers=8, dataset_shuffle=True):
-    dataset = SelfCollectedDS(**dataset_config, split='train')
-
-    loader = torch.utils.data.DataLoader(dataset=dataset, num_workers=num_workers, batch_size=BS, pin_memory=True)
-    print("Total number of sample:", len(dataset))
-
-    return loader, loader, loader
 
 def _load_mDFD_data(dataset_config, BS, num_workers=8, dataset_shuffle=True, n_shot=-1, sel_indices=None):
     dataset = MobileDFD(**dataset_config)

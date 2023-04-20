@@ -3,7 +3,6 @@ sys.path.append('..')
 
 import numpy as np
 from tqdm.auto import tqdm, trange
-# from torch.utils.tensorboard import SummaryWriter
 import wandb
 
 import torch
@@ -24,13 +23,6 @@ if args.manual_seed != None:
     np.random.seed(args.manual_seed)
 
 print(f'Running Experiment {args.name}')
-
-# if args.use_cuda:
-#     torch.cuda.set_device(args.device)
-#     print(f"Running on CUDA{args.device}")
-# else:
-#     args.device = torch.device("cpu")
-#     print(f"Running on CPU")
 
 if args.log:
     wandb.init(project="SS-DFD-Formal", dir='..', name=args.name)
@@ -59,7 +51,5 @@ if args.continue_from != '':
 if not args.eval:
     trainer.train()
 trainer.eval_model()
-# trainer.eval_model(0.5)
-# trainer.eval_model(2)
 
 

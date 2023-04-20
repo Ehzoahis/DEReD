@@ -5,9 +5,8 @@ def get_parser():
     parser.add_argument('--name', '-N', type=str, required=True)
 
     # Data
-    parser.add_argument('--data_path', type=str, default="/mnt/cfs/sihaozhe/data/fs_7_05")
-    parser.add_argument('--dataset', type=str, choices=['NYUv2', 'NYU100', 'DSLR', 'SC', 'mobileDFD', 'DefocusNet'], default='NYUv2')
-    parser.add_argument('--normalize_dpt', action='store_true', default=False)
+    parser.add_argument('--data_path', type=str, default="./data/NYUv2")
+    parser.add_argument('--dataset', type=str, choices=['NYUv2', 'NYU100', 'mobileDFD', 'DefocusNet'], default='NYUv2')
     parser.add_argument('--shuffle', type=bool, default=True)
     parser.add_argument('--image_num', type=int, default=5)
     parser.add_argument('--visible_image_num', type=int, default=5)
@@ -31,7 +30,7 @@ def get_parser():
     parser.add_argument('--blur_loss_lambda', type=float, default=1e-1)
     parser.add_argument('--recon_loss_lambda', type=float, default=1e3)
     parser.add_argument('--sm_loss_lambda', type=float, default=1e1)
-    parser.add_argument('--sharp_loss_lambda', type=float, default=1e2)
+    parser.add_argument('--sharp_loss_lambda', type=float, default=0)
     parser.add_argument('--recon_loss_alpha', type=float, default=0.85)
     parser.add_argument('--sm_loss_beta', type=float, default=1.)
     parser.add_argument('--blur_loss_sigma', type=float, default=1.)

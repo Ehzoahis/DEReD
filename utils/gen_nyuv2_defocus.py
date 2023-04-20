@@ -10,7 +10,7 @@ render = GaussPSF(7)
 render.cuda()
 
 camera = ThinLenCamera(8, focal_length=50e-3, pixel_size=1.2e-5)
-data_path = '/mnt/lustre/sihaozhe/data/NYUv2-ori'
+data_path = './data/NYUv2'
 fd_list = [1, 1.5, 2.5, 4, 6]
 
 for split in ['train', 'test']:

@@ -14,7 +14,7 @@ def read_dpt(img_dpt_path):
     dpt.shape = (size[1], size[0])
     return dpt
 
-root_dir = "/path/to/dataset/"
+root_dir = "./data/DefocusNet"
 imglist_dpt = [f for f in os.listdir(root_dir) if os.path.isfile(os.path.join(root_dir, f)) and f[-7:] == "Dpt.exr"]
 
 for dpt in tqdm(imglist_dpt):

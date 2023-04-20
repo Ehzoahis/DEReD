@@ -4,7 +4,7 @@ import os
 import shutil
 import numpy as np
 
-ROOT = '/mnt/cfs/sihaozhe/data' # contain both aligned and src if download from https://www.supasorn.com/dffdownload.html
+ROOT = './data' # contain both aligned and src if download from https://www.supasorn.com/dffdownload.html
 ALIGNED_PTH = ROOT + '/Aligned/' # path to  "Photos, Calbration, Results: Download" files
 SRC_PTH = ROOT + '/calibration/' # path to "Aligned focus stack: Download" files
 
